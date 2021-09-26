@@ -13,7 +13,6 @@ export default function App() {
  
   const handleSearchSubmit = (searchName) => {
     setSearchName(searchName);
-
   }
 
   const handleSelectImage = imageUrl => {
@@ -22,8 +21,7 @@ export default function App() {
 
   const closeModal = () => setSelectedImage(null);
 
-  
-    return (
+      return (
       <Container>
         
           <Searchbar onSubmit={handleSearchSubmit} />
