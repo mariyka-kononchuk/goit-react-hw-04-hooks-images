@@ -40,7 +40,7 @@ export default function App() {
     fetchImages(searchName, page)
       .then((data) => {
         if (data.hits.length === 0) {
-          return toast('Извините, по вашему запросу ничего не найдено', {
+          return toast('Alas, no items found per your query', {
             style: {
               borderRadius: '10px',
               background: '#333',
