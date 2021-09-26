@@ -17,10 +17,9 @@ const Status = {
 }
 
 export default function App() {
-  
   const [searchName, setSearchName] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
   const [page, setPage] = useState(null);
   const [searchResult, setSearchResult] = useState(null);
   const [status, setStatus] = useState(Status.IDLE);
@@ -35,6 +34,9 @@ export default function App() {
   }
 
   useEffect(() => {
+    if (!searchName) {
+      return
+    }
     fetchImages(searchName, page)
       .then((data) => {
         if (data.hits.length === 0) {
@@ -48,13 +50,11 @@ export default function App() {
         }
         let newImages = [...images, ...data.hits];
         setImages(newImages);
-
         setSearchResult(data.total);
         setStatus(Status.RESOLVED);
         setSpinner(false);
         scrollToRef();
       })
-
       .catch(error => {
         setStatus(Status.REJECTED);
         setSpinner(false);
@@ -62,7 +62,6 @@ export default function App() {
 
   }, [searchName, page])
 
-    
   const handleSelectImage = imageUrl => {
     setSelectedImage(imageUrl);
   }

@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem';
 import { List } from './ImageGallery.styled.jsx'
