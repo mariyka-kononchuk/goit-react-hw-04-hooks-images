@@ -10,9 +10,10 @@ export default function App() {
   
   const [searchName, setSearchName] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleSearchSubmit = searchName => {
+ 
+  const handleSearchSubmit = (searchName) => {
     setSearchName(searchName);
+
   }
 
   const handleSelectImage = imageUrl => {
@@ -26,7 +27,9 @@ export default function App() {
       <Container>
         
           <Searchbar onSubmit={handleSearchSubmit} />
-          <ImageGallery searchName={searchName} onSelect={handleSelectImage}/>
+        <ImageGallery
+          searchName={searchName}
+          onSelect={handleSelectImage} />
           {selectedImage && <Modal onClose = {closeModal}>
             <img src={selectedImage} alt="" />
           </Modal>}

@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-04-hooks-feedback",
+  "name": "goit-react-hw-04-hooks-images",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mariyka-kononchuk.github.io/goit-react-hw-04-hooks-feedback",
+  "homepage": "https://mariyka-kononchuk.github.io/goit-react-hw-04-hooks-images",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",

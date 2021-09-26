@@ -1,20 +1,21 @@
-import React, {useState} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { Header, SearchForm, SearchFormButton, Label, Input } from './Searchbar.styled'
 
-export default function Searchbar({ onSubmit }) {
-    
-    const [searchName, setSearchName] = useState('');
-    
-    const handleNameChange = e => {
-        setSearchName(e.currentTarget.value.toLowerCase())
+export default class Searchbar extends Component {
+    state = {
+        searchName: '',
+    };
+
+    handleNameChange = e => {
+        this.setState({ searchName: e.currentTarget.value.toLowerCase() })
     }
 
-    const handleSubmit = e => {
+    handleSubmit = e => {
         e.preventDefault();
-        if (searchName.trim() === '') {
-            return toast('Please enter search word', {
+        if (this.state.searchName.trim() === '') {
+            return toast('Введите слово в поиск', {
                 style: {
                     borderRadius: '10px',
                     background: '#333',
@@ -22,13 +23,15 @@ export default function Searchbar({ onSubmit }) {
                 }
             });
         }
-        onSubmit(searchName);
-        setSearchName('')
+        this.props.onSubmit(this.state.searchName);
+        this.setState({ searchName: '' });
     }
 
+    render() {
+        const { searchName } = this.state;
         return (
             <Header>
-                <SearchForm  onSubmit={handleSubmit}>
+                <SearchForm  onSubmit={this.handleSubmit}>
                     <SearchFormButton type="submit">
                         <Label>Search</Label>
                     </SearchFormButton>
@@ -36,7 +39,7 @@ export default function Searchbar({ onSubmit }) {
                         type="text"
                         name={searchName}
                         value={searchName}
-                        onChange = {handleNameChange}
+                        onChange = {this.handleNameChange}
                         autocomplete="off"
                         autoFocus
                         placeholder="Search images and photos"
@@ -44,7 +47,7 @@ export default function Searchbar({ onSubmit }) {
                 </SearchForm>
             </Header>
         )
-    
+    }
 }
 
 Searchbar.propTypes = {

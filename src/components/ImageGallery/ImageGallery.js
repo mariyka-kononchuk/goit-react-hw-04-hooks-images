@@ -7,30 +7,34 @@ import LoadMoreButton from '../Button';
 import SpinnerLoader from '../Loader';
 
 import { fetchImages } from '../../services/images-api';
-import {List} from './ImageGallery.styled.jsx'
+import { List } from './ImageGallery.styled.jsx'
 
-export default function ImageGallery({ searchName, onSelect }) {
-    const [images, setImages] = useState([]);
-    const [page, setPage] = useState(1);
+const Status = {
+    IDLE: 'idle',
+    RESOLVED: 'resolved',
+    REJECTED:'rejected'
+}
+
+export default function ImageGallery({ searchName, onSelect}) {
+    const [images, setImages] = useState( []);
+    const [page, setPage] = useState( 1 );
     const [searchResult, setSearchResult] = useState(null);
-    const [status, setStatus] = useState('idle');
+    const [status, setStatus] = useState(Status.IDLE);
     const [spinner, setSpinner] = useState(false);
 
     const myRef = useRef();
     
+    //new search
      useEffect(() => {
-         console.log('вызывается useEffect2')
-         console.log(searchName)
-         if (!searchName) return;
-         setSpinner(true);
-         
-
-        fetchImages(searchName, page)
+        if (!searchName) {
+            return; 
+        }
+        setSpinner(true);
+    
+        fetchImages(searchName, 1)
             .then((data) => {
-                
-                
                 if (data.hits.length === 0) {
-                    return toast('Извините, по вашему запросу ничего не найдено', {
+                    return toast('Alas, no items found per your query', {
                         style: {
                             borderRadius: '10px',
                             background: '#333',
@@ -38,26 +42,40 @@ export default function ImageGallery({ searchName, onSelect }) {
                         },
                     });
                 }
-                let newImages = [...images, ...data.hits];
-                setImages(newImages);
-                
+                setImages(data.hits);
                 setSearchResult(data.total);
-                setStatus('resolved');
+                setStatus(Status.RESOLVED);
                 setSpinner(false);
-                console.log(data.hits.length)
-                 console.log(myRef)
                 scrollToRef();
             })
-            
             .catch(error => {
-                console.log('errors')
-                setStatus('rejected');
+                setStatus(Status.REJECTED);
                 setSpinner(false);
             });
-         
-    },[searchName, page])
-
+        
+     }, [searchName])
     
+    //load more
+    useEffect(() => {
+        if (!searchName) {
+            return; 
+        }
+        setSpinner(true);
+        fetchImages(searchName, page)
+            .then((data) => {
+                let newImages = [...images, ...data.hits];
+                setImages(newImages);
+                setSearchResult(data.total);
+                setStatus(Status.RESOLVED);
+                setSpinner(false);
+                scrollToRef();
+            })
+            .catch(error => {
+                setStatus(Status.REJECTED);
+                setSpinner(false);
+            });
+        
+    },[page])
 
     const toggleLoadMore = () => {
         setSpinner(true);
@@ -68,11 +86,11 @@ export default function ImageGallery({ searchName, onSelect }) {
         myRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
 
-    if (status === 'idle') {
+    if (status === Status.IDLE) {
         return <div></div>
     }
     
-    if (status === 'rejected') {
+    if (status === Status.REJECTED) {
         return toast('Извините, по вашему запросу ничего не найдено', {
             style: {
                 borderRadius: '10px',
@@ -82,7 +100,7 @@ export default function ImageGallery({ searchName, onSelect }) {
         });
     }
     
-    if (status === 'resolved') {
+    if (status === Status.RESOLVED) {
         return (
             <div>
                 <List >
@@ -98,3 +116,9 @@ export default function ImageGallery({ searchName, onSelect }) {
     
     }
 }
+
+ImageGallery.propTypes = {
+    onSubmit: PropTypes.func,
+    onSelect: PropTypes.func,
+    searchName: PropTypes.string.isRequired,
+};
