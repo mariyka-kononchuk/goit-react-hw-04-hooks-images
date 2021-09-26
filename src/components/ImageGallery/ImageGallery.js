@@ -39,6 +39,7 @@ export default function ImageGallery({ images, status, onSelect}) {
 }
 
 ImageGallery.propTypes = {
-    onSubmit: PropTypes.func,
+    images: PropTypes.array.isRequired,
+    status: PropTypes.string.isRequired,
     onSelect: PropTypes.func,
 };
